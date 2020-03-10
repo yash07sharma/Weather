@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:background="@android:color/black"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
@@ -86,6 +87,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/temperature_details"
         app:layout_constraintEnd_toStartOf="@+id/temperature_details"
         app:layout_constraintStart_toStartOf="parent"
+        android:visibility="invisible"
         app:layout_constraintTop_toTopOf="@+id/temperature_details"
         app:srcCompat="@drawable/ic_launcher_foreground" />
 
@@ -95,7 +97,6 @@
         android:layout_height="wrap_content"
         android:gravity="end"
         android:paddingEnd="10sp"
-        android:text="Foggy"
         android:textColor="@android:color/white"
         android:textSize="38sp"
         app:layout_constraintBottom_toBottomOf="parent"

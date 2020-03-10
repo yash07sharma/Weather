@@ -6,6 +6,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
+import android.animation.Animator;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -24,6 +25,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -52,6 +55,12 @@ public class MainActivity extends AppCompatActivity {
     private FusedLocationProviderClient mFusedLocationClient;
     private int PERMISSION_ID = 44;
     private ImageView backgroundImage;
+    private String temp_details;
+    private String temp_unitDetails;
+    private String temp_cityDetails;
+    private String temp_country;
+    private String temp_weather_type;
+
     private TextView tempDetails;
     private TextView unitDetails;
     private TextView cityDetails;
@@ -75,7 +84,6 @@ public class MainActivity extends AppCompatActivity {
         weatherIcon = findViewById(R.id.weather_icon);
         weatherType = findViewById(R.id.weather_type);
         backgroundImage.setTag(1);
-        //backgroundImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
         backgroundImage.setImageResource((backgroundImageList[0]));
         /*backgroundImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,26 +95,68 @@ public class MainActivity extends AppCompatActivity {
         getLastLocation();
     }
     private void changeImageToNight() {
-        Animation animation = AnimationUtils.loadAnimation(getBaseContext(), R.anim.fadeout);
-        backgroundImage.setAnimation(animation);
-        animation.start();
-        //Toast.makeText(getBaseContext(),"Changing",Toast.LENGTH_SHORT).show();
-        backgroundImage.setImageResource(R.drawable.night);
-        backgroundImage.setTag(2);
-        animation = AnimationUtils.loadAnimation(getBaseContext(), R.anim.fadein);
-        backgroundImage.setAnimation(animation);
-        animation.start();
+        YoYo.with(Techniques.FadeOut)
+                .duration(500)
+                .repeat(0)
+                .withListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        backgroundImage.setImageResource((R.drawable.night));
+                        backgroundImage.setTag(1);
+                        YoYo.with(Techniques.FadeIn)
+                                .duration(1000)
+                                .repeat(0)
+                                .playOn(backgroundImage);
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animator animation) {
+
+                    }
+                })
+                .playOn(backgroundImage);
     }
     private void changeImageToDay() {
-        Animation animation = AnimationUtils.loadAnimation(getBaseContext(), R.anim.fadeout);
-        backgroundImage.setAnimation(animation);
-        animation.start();
-        //Toast.makeText(getBaseContext(),"Changing",Toast.LENGTH_SHORT).show();
-        backgroundImage.setBackground(getDrawable(R.drawable.sunrise));
-        backgroundImage.setTag(1);
-        animation = AnimationUtils.loadAnimation(getBaseContext(), R.anim.fadein);
-        backgroundImage.setAnimation(animation);
-        animation.start();
+        YoYo.with(Techniques.FadeOut)
+                .duration(500)
+                .repeat(0)
+                .withListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        backgroundImage.setBackground(getDrawable(R.drawable.sunrise));
+                        backgroundImage.setTag(1);
+                        YoYo.with(Techniques.FadeIn)
+                                .duration(1000)
+                                .repeat(0)
+                                .playOn(backgroundImage);
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animator animation) {
+
+                    }
+                })
+                .playOn(backgroundImage);
     }
 
     private void setCity() {
@@ -124,8 +174,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<WeatherLocation> call, Response<WeatherLocation> response) {
                 WeatherLocation locationData = response.body();
-                cityDetails.setText(locationData.getName());
-                countryDetails.setText(locationData.getWeatherCountryName());
+                temp_cityDetails=(locationData.getName());
+                temp_country=(locationData.getWeatherCountryName());
                 currentKey = locationData.getKey();
                 setTemp();
             }
@@ -151,9 +201,9 @@ public class MainActivity extends AppCompatActivity {
             public void onResponse(Call<ArrayList<WeatherDetails>> call, Response<ArrayList<WeatherDetails>> response) {
                 ArrayList<WeatherDetails> details = response.body();
                 for (WeatherDetails weatherDetails : details) {
-                    tempDetails.setText(weatherDetails.getTemperatureDetails().getMetric().getTemp().toString());
-                    unitDetails.setText(" °"+weatherDetails.getTemperatureDetails().getMetric().getUnit());
-                    weatherType.setText(weatherDetails.getWeatherType());
+                    temp_details=(weatherDetails.getTemperatureDetails().getMetric().getTemp().toString());
+                    temp_unitDetails=(" °"+weatherDetails.getTemperatureDetails().getMetric().getUnit());
+                    temp_weather_type=(weatherDetails.getWeatherType());
                     currentWeatherIconCode = weatherDetails.getWeatherIconCode();
                     if(weatherDetails.isIs_day()==true)
                     {
@@ -183,6 +233,132 @@ public class MainActivity extends AppCompatActivity {
         else
             imagetoSet = "https://developer.accuweather.com/sites/default/files/0" + currentWeatherIconCode + "-s" + ".png";
         Picasso.get().load(imagetoSet).resize(weatherIcon.getWidth(),weatherIcon.getHeight()).centerCrop().into(weatherIcon);
+        weatherIcon.setVisibility(View.VISIBLE);
+        YoYo.with(Techniques.FadeIn)
+                .duration(1000)
+                .repeat(0)
+                .withListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+                        cityDetails.setText(temp_cityDetails);
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animator animation) {
+
+                    }
+                })
+                .playOn(cityDetails);
+        YoYo.with(Techniques.FadeIn)
+                .duration(1000)
+                .repeat(0)
+                .withListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+                        tempDetails.setText(temp_details);
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animator animation) {
+
+                    }
+                })
+                .playOn(tempDetails);
+        YoYo.with(Techniques.FadeIn)
+                .duration(1000)
+                .repeat(0)
+                .withListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+                        unitDetails.setText(temp_unitDetails);
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animator animation) {
+
+                    }
+                })
+                .playOn(unitDetails);
+        YoYo.with(Techniques.FadeIn)
+                .duration(1000)
+                .repeat(0)
+                .withListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+                        countryDetails.setText(temp_country);
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animator animation) {
+
+                    }
+                })
+                .playOn(countryDetails);
+        YoYo.with(Techniques.FadeIn)
+                .duration(1000)
+                .repeat(0)
+                .withListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+                        weatherType.setText(temp_weather_type);
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animator animation) {
+
+                    }
+                })
+                .playOn(weatherType);
     }
 
     private boolean checkPermission() {
