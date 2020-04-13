@@ -48,29 +48,29 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
 
-    private double Lat = 0;
-    private double Long = 0;
-    private String LatLng;
-    private String currentKey;
-    private FusedLocationProviderClient mFusedLocationClient;
-    private int PERMISSION_ID = 44;
-    private ImageView backgroundImage;
-    private String temp_details;
-    private String temp_unitDetails;
-    private String temp_cityDetails;
-    private String temp_country;
-    private String temp_weather_type;
+    public double Lat = 0;
+    public double Long = 0;
+    public String LatLng;
+    public String currentKey;
+    public FusedLocationProviderClient mFusedLocationClient;
+    public int PERMISSION_ID = 44;
+    public ImageView backgroundImage;
+    public String temp_details;
+    public String temp_unitDetails;
+    public String temp_cityDetails;
+    public String temp_country;
+    public String temp_weather_type;
 
-    private TextView tempDetails;
-    private TextView unitDetails;
-    private TextView cityDetails;
-    private TextView countryDetails;
-    private TextView weatherType;
-    private ImageView weatherIcon;
-    private Context context;
-    private int currentWeatherIconCode;
-    private int[] backgroundImageList = {R.drawable.sunrise, R.drawable.night};
-
+    public TextView tempDetails;
+    public TextView unitDetails;
+    public TextView cityDetails;
+    public TextView countryDetails;
+    public TextView weatherType;
+    public ImageView weatherIcon;
+    public Context context;
+    public int currentWeatherIconCode;
+    public int[] backgroundImageList = {R.drawable.sunrise, R.drawable.night};
+    public Client client;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
         weatherType = findViewById(R.id.weather_type);
         backgroundImage.setTag(1);
         backgroundImage.setImageResource((backgroundImageList[0]));
+        client=new Client(MainActivity.this);
         /*backgroundImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -94,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         getLastLocation();
     }
-    private void changeImageToNight() {
+    public void changeImageToNight() {
         YoYo.with(Techniques.FadeOut)
                 .duration(500)
                 .repeat(0)
@@ -126,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
                 })
                 .playOn(backgroundImage);
     }
-    private void changeImageToDay() {
+    public void changeImageToDay() {
         YoYo.with(Techniques.FadeOut)
                 .duration(500)
                 .repeat(0)
@@ -159,74 +160,74 @@ public class MainActivity extends AppCompatActivity {
                 .playOn(backgroundImage);
     }
 
-    private void setCity() {
-        Retrofit retrofitName = new Retrofit.Builder()
-                .baseUrl("http://dataservice.accuweather.com/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
+//    private void setCity() {
+//        Retrofit retrofitName = new Retrofit.Builder()
+//                .baseUrl("http://dataservice.accuweather.com/")
+//                .addConverterFactory(GsonConverterFactory.create())
+//                .build();
+//
+//        JsonPlaceHolderApiName jsonPlaceHolderApiName = retrofitName.create(JsonPlaceHolderApiName.class);
+//        Call<WeatherLocation> callName = jsonPlaceHolderApiName.getWeatherLocation(JsonPlaceHolderApiName.API_KEY, LatLng,
+//                JsonPlaceHolderApiName.language, JsonPlaceHolderApiName.details, JsonPlaceHolderApiName.toplevel
+//        );
+//
+//        callName.enqueue(new Callback<WeatherLocation>() {
+//            @Override
+//            public void onResponse(Call<WeatherLocation> call, Response<WeatherLocation> response) {
+//                WeatherLocation locationData = response.body();
+//                temp_cityDetails=(locationData.getName());
+//                temp_country=(locationData.getWeatherCountryName());
+//                currentKey = locationData.getKey();
+//                setTemp();
+//            }
+//
+//            @Override
+//            public void onFailure(Call<WeatherLocation> call, Throwable t) {
+//                Toast.makeText(MainActivity.this, "Error shown", Toast.LENGTH_SHORT).show();
+//
+//            }
+//        });
+//    }
 
-        JsonPlaceHolderApiName jsonPlaceHolderApiName = retrofitName.create(JsonPlaceHolderApiName.class);
-        Call<WeatherLocation> callName = jsonPlaceHolderApiName.getWeatherLocation(JsonPlaceHolderApiName.API_KEY, LatLng,
-                JsonPlaceHolderApiName.language, JsonPlaceHolderApiName.details, JsonPlaceHolderApiName.toplevel
-        );
+//    private void setTemp() {
+//        Retrofit retrofitTemp = new Retrofit.Builder()
+//                .baseUrl("http://dataservice.accuweather.com/currentconditions/v1/")
+//                .addConverterFactory(GsonConverterFactory.create())
+//                .build();
+//        JsonPlaceHolderApiWeather jsonPlaceHolderApiWeather = retrofitTemp.create(JsonPlaceHolderApiWeather.class);
+//        Call<ArrayList<WeatherDetails>> callWeather = jsonPlaceHolderApiWeather.getWeatherDetails(currentKey, JsonPlaceHolderApiWeather.API_KEY, JsonPlaceHolderApiWeather.language, JsonPlaceHolderApiWeather.
+//                details);
+//        callWeather.enqueue(new Callback<ArrayList<WeatherDetails>>() {
+//            @Override
+//            public void onResponse(Call<ArrayList<WeatherDetails>> call, Response<ArrayList<WeatherDetails>> response) {
+//                ArrayList<WeatherDetails> details = response.body();
+//                for (WeatherDetails weatherDetails : details) {
+//                    temp_details=(weatherDetails.getTemperatureDetails().getMetric().getTemp().toString());
+//                    temp_unitDetails=(" °"+weatherDetails.getTemperatureDetails().getMetric().getUnit());
+//                    temp_weather_type=(weatherDetails.getWeatherType());
+//                    currentWeatherIconCode = weatherDetails.getWeatherIconCode();
+//                    if(weatherDetails.isIs_day()==true)
+//                    {
+//                        changeImageToDay();
+//                        setImage();
+//                    }
+//                    else
+//                    {
+//                        changeImageToNight();
+//                        setImage();
+//                    }
+//                    //String imagetoSet
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<ArrayList<WeatherDetails>> call, Throwable t) {
+//
+//            }
+//        });
+//    }
 
-        callName.enqueue(new Callback<WeatherLocation>() {
-            @Override
-            public void onResponse(Call<WeatherLocation> call, Response<WeatherLocation> response) {
-                WeatherLocation locationData = response.body();
-                temp_cityDetails=(locationData.getName());
-                temp_country=(locationData.getWeatherCountryName());
-                currentKey = locationData.getKey();
-                setTemp();
-            }
-
-            @Override
-            public void onFailure(Call<WeatherLocation> call, Throwable t) {
-                Toast.makeText(MainActivity.this, "Error shown", Toast.LENGTH_SHORT).show();
-
-            }
-        });
-    }
-
-    private void setTemp() {
-        Retrofit retrofitTemp = new Retrofit.Builder()
-                .baseUrl("http://dataservice.accuweather.com/currentconditions/v1/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        JsonPlaceHolderApiWeather jsonPlaceHolderApiWeather = retrofitTemp.create(JsonPlaceHolderApiWeather.class);
-        Call<ArrayList<WeatherDetails>> callWeather = jsonPlaceHolderApiWeather.getWeatherDetails(currentKey, JsonPlaceHolderApiWeather.API_KEY, JsonPlaceHolderApiWeather.language, JsonPlaceHolderApiWeather.
-                details);
-        callWeather.enqueue(new Callback<ArrayList<WeatherDetails>>() {
-            @Override
-            public void onResponse(Call<ArrayList<WeatherDetails>> call, Response<ArrayList<WeatherDetails>> response) {
-                ArrayList<WeatherDetails> details = response.body();
-                for (WeatherDetails weatherDetails : details) {
-                    temp_details=(weatherDetails.getTemperatureDetails().getMetric().getTemp().toString());
-                    temp_unitDetails=(" °"+weatherDetails.getTemperatureDetails().getMetric().getUnit());
-                    temp_weather_type=(weatherDetails.getWeatherType());
-                    currentWeatherIconCode = weatherDetails.getWeatherIconCode();
-                    if(weatherDetails.isIs_day()==true)
-                    {
-                        changeImageToDay();
-                        setImage();
-                    }
-                    else
-                    {
-                        changeImageToNight();
-                        setImage();
-                    }
-                    //String imagetoSet
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ArrayList<WeatherDetails>> call, Throwable t) {
-
-            }
-        });
-    }
-
-    private void setImage() {
+    public void setImage() {
         String imagetoSet;
         if (currentWeatherIconCode >= 10)
             imagetoSet = "https://developer.accuweather.com/sites/default/files/" + currentWeatherIconCode + "-s" + ".png";
@@ -402,7 +403,7 @@ public class MainActivity extends AppCompatActivity {
                                     Lat = location.getLatitude();
                                     Long = location.getLongitude();
                                     LatLng = Lat + "," + Long;
-                                    setCity();
+                                    client.setCity();
                                 }
                             }
                         }
@@ -441,7 +442,7 @@ public class MainActivity extends AppCompatActivity {
             Lat = mLastLocation.getLatitude();
             Long = mLastLocation.getLongitude();
             LatLng = Lat + "," + Long;
-            setCity();
+            client.setCity();
         }
     };
 
